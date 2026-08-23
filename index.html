@@ -28,7 +28,7 @@
         html, body { height: 100%; overflow: hidden; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; }
 
         .app-container { width: 100%; max-width: 650px; height: 100dvh; display: flex; flex-direction: column; background: var(--surface-color); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); position: relative; }
-        .screen { display: flex; flex-direction: column; height: 100%; padding: 14px; gap: 14px; overflow: hidden; }
+        .screen { display: flex; flex-direction: column; height: 100%; padding: 14px; gap: 14px; overflow: hidden; position: relative; }
         .hidden { display: none !important; }
 
         .auth-card { margin: auto 0; background: var(--surface-bright); padding: 24px; border: 1px solid var(--glass-border); box-shadow: var(--shadow-float); display: flex; flex-direction: column; gap: 16px; }
@@ -85,7 +85,9 @@
         .reaction-badge { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 2px 6px; font-size: 11px; display: flex; align-items: center; gap: 4px; }
 
         .reply-banner { background: var(--surface-bright); padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; border: 1px solid var(--glass-border); border-bottom: none; }
-        .input-area { display: flex; gap: 8px; align-items: center; position: relative; padding-bottom: env(safe-area-inset-bottom); transition: transform 0.1s ease-out; }
+        
+        /* Исправленный блок ввода */
+        .input-area { display: flex; gap: 8px; align-items: center; position: relative; margin-top: auto; padding-bottom: max(6px, env(safe-area-inset-bottom)); width: 100%; }
         
         .glass-input-box { flex: 1; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); box-shadow: var(--shadow-float); display: flex; align-items: center; }
         .glass-input-box input { border: none; background: transparent; padding: 12px; font-size: 16px; }
@@ -96,7 +98,7 @@
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        .attach-popover { position: absolute; bottom: 52px; left: 0; background: var(--surface-bright); border: 1px solid var(--glass-border); box-shadow: var(--shadow-float); padding: 4px; display: flex; flex-direction: column; gap: 2px; z-index: 50; width: 200px; }
+        .attach-popover { position: absolute; bottom: 56px; left: 0; background: var(--surface-bright); border: 1px solid var(--glass-border); box-shadow: var(--shadow-float); padding: 4px; display: flex; flex-direction: column; gap: 2px; z-index: 50; width: 200px; }
         .attach-opt { display: flex; align-items: center; gap: 10px; padding: 10px; font-size: 13px; cursor: pointer; }
         .attach-opt:hover { background: var(--glass-bg); color: var(--primary-color); }
 
@@ -270,21 +272,6 @@
 
         const input = document.getElementById('message-input');
         input.addEventListener('paste', handlePasteEvent);
-
-        if (window.visualViewport) {
-            window.visualViewport.addEventListener('resize', () => {
-                const inputArea = document.getElementById('input-area');
-                const messagesList = document.getElementById('messages-list');
-                const keyboardHeight = window.innerHeight - window.visualViewport.height;
-
-                if (keyboardHeight > 0) {
-                    inputArea.style.transform = `translateY(-${keyboardHeight}px)`;
-                } else {
-                    inputArea.style.transform = 'translateY(0)';
-                }
-                messagesList.scrollTop = messagesList.scrollHeight;
-            });
-        }
     });
 
     function requestNotificationPermission() {
