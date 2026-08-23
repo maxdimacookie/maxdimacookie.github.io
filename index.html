@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-visual">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MAX DIMA COOKIE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,7 +27,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; border-radius: 0 !important; }
         html, body { height: 100%; overflow: hidden; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; }
 
-        .app-container { width: 100%; max-width: 650px; height: 100dvh; display: flex; flex-direction: column; background: var(--surface-color); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); position: relative; }
+        .app-container { width: 100%; max-width: 650px; height: 100%; display: flex; flex-direction: column; background: var(--surface-color); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); position: relative; }
         .screen { display: flex; flex-direction: column; height: 100%; padding: 14px; gap: 14px; overflow: hidden; position: relative; }
         .hidden { display: none !important; }
 
@@ -56,7 +56,9 @@
         .icon-btn:hover { background: var(--glass-bg); color: var(--primary-color); }
 
         .messages-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; padding: 8px 4px; }
-        .system-msg { align-self: center; background: var(--surface-bright); border: 1px solid var(--glass-border); padding: 6px 14px; font-size: 12px; color: var(--primary-color); font-weight: 500; letter-spacing: 0.5px; box-shadow: var(--shadow-float); }
+        
+        /* Системное сообщение с поддержкой нажатий */
+        .system-msg { align-self: center; background: var(--surface-bright); border: 1px solid var(--glass-border); padding: 6px 14px; font-size: 12px; color: var(--primary-color); font-weight: 500; letter-spacing: 0.5px; box-shadow: var(--shadow-float); cursor: pointer; user-select: none; }
 
         .message-wrapper { display: flex; gap: 10px; max-width: 85%; align-self: flex-start; align-items: flex-start; }
         .message-wrapper.my-msg { align-self: flex-end; flex-direction: row-reverse; }
@@ -86,8 +88,8 @@
 
         .reply-banner { background: var(--surface-bright); padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; border: 1px solid var(--glass-border); border-bottom: none; }
         
-        /* Исправленный блок ввода */
-        .input-area { display: flex; gap: 8px; align-items: center; position: relative; margin-top: auto; padding-bottom: max(6px, env(safe-area-inset-bottom)); width: 100%; }
+        /* Зафиксированная панель ввода (не улетает с клавиатурой) */
+        .input-area { display: flex; gap: 8px; align-items: center; position: relative; width: 100%; flex-shrink: 0; }
         
         .glass-input-box { flex: 1; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); box-shadow: var(--shadow-float); display: flex; align-items: center; }
         .glass-input-box input { border: none; background: transparent; padding: 12px; font-size: 16px; }
@@ -215,14 +217,14 @@
 
     <div id="context-menu" class="modal hidden" onclick="closeContextMenu(event)">
         <div class="modal-card" onclick="event.stopPropagation()">
-            <div class="reactions-selector">
+            <div id="reactions-box" class="reactions-selector">
                 <span onclick="addReaction('👍')">👍</span>
                 <span onclick="addReaction('👎')">👎</span>
                 <span onclick="addReaction('❤️')">❤️</span>
                 <span onclick="addReaction('🔥')">🔥</span>
                 <span onclick="addReaction('💩')">💩</span>
             </div>
-            <div class="menu-action" onclick="prepareReply()">Ответить</div>
+            <div id="reply-action" class="menu-action" onclick="prepareReply()">Ответить</div>
             <div id="dm-action" class="menu-action" onclick="startDirectMessage()">Написать в личку</div>
             <div id="delete-action" class="menu-action danger hidden" onclick="deleteTargetMessage()">Удалить</div>
         </div>
@@ -231,7 +233,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, set, get, child, onChildAdded, onChildChanged, onChildRemoved, update, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    import { getDatabase, ref, push, set, get, child, onChildAdded, onChildChanged, onChildRemoved, update, onValue, onDisconnect, remove } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
     const firebaseConfig = {
         databaseURL: "https://maxdimacookie-default-rtdb.europe-west1.firebasedatabase.app"
@@ -732,6 +734,11 @@
                 el.className = 'system-msg';
                 el.id = `msg-${id}`;
                 el.textContent = data.text;
+
+                el.addEventListener('touchstart', () => { pressTimer = setTimeout(() => openContextMenu(id, data), 500); });
+                el.addEventListener('touchend', () => clearTimeout(pressTimer));
+                el.addEventListener('click', () => openContextMenu(id, data));
+
                 list.appendChild(el);
             }
             list.scrollTop = list.scrollHeight;
@@ -916,9 +923,23 @@
     };
 
     function openContextMenu(id, data) {
-        if (data.isSystem) return;
         selectedMsgId = id;
         selectedMsgData = data;
+        const isAdmin = currentUser && (currentUser.role === 'owner' || currentUser.role === 'admin');
+
+        if (data.isSystem) {
+            if (!isAdmin) return;
+            document.getElementById('reactions-box').classList.add('hidden');
+            document.getElementById('reply-action').classList.add('hidden');
+            document.getElementById('dm-action').classList.add('hidden');
+            document.getElementById('delete-action').classList.remove('hidden');
+            document.getElementById('context-menu').classList.remove('hidden');
+            return;
+        }
+
+        document.getElementById('reactions-box').classList.remove('hidden');
+        document.getElementById('reply-action').classList.remove('hidden');
+
         const isMy = data.user === currentUser.name;
         
         let canDelete = isMy;
@@ -961,7 +982,11 @@
 
     window.deleteTargetMessage = () => {
         if (!selectedMsgId) return;
-        update(child(activeMessagesRef, selectedMsgId), { deleted: true });
+        if (selectedMsgData && selectedMsgData.isSystem) {
+            remove(child(activeMessagesRef, selectedMsgId));
+        } else {
+            update(child(activeMessagesRef, selectedMsgId), { deleted: true });
+        }
         closeContextMenu();
     };
 
