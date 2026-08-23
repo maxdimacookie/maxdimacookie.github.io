@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-visual">
     <title>MAX DIMA COOKIE</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,9 +25,9 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; border-radius: 0 !important; }
-        html, body { height: 100vh; overflow: hidden; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; }
+        html, body { height: 100%; overflow: hidden; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; }
 
-        .app-container { width: 100%; max-width: 650px; height: 100vh; display: flex; flex-direction: column; background: var(--surface-color); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); position: relative; }
+        .app-container { width: 100%; max-width: 650px; height: 100dvh; display: flex; flex-direction: column; background: var(--surface-color); border-left: 1px solid var(--border-color); border-right: 1px solid var(--border-color); position: relative; }
         .screen { display: flex; flex-direction: column; height: 100%; padding: 14px; gap: 14px; overflow: hidden; }
         .hidden { display: none !important; }
 
@@ -37,7 +37,7 @@
         .auth-tab { flex: 1; padding: 10px; text-align: center; cursor: pointer; color: var(--text-muted); font-weight: 600; }
         .auth-tab.active { background: var(--primary-color); color: #FFF; }
         
-        input, select { width: 100%; padding: 12px 14px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); outline: none; font-size: 14px; }
+        input, select { width: 100%; padding: 12px 14px; border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-color); outline: none; font-size: 16px; }
         input:focus, select:focus { border-color: var(--primary-color); }
 
         .custom-file-btn { display: block; padding: 10px; background: var(--bg-color); border: 1px dashed var(--border-color); text-align: center; cursor: pointer; font-size: 13px; color: var(--text-muted); }
@@ -47,7 +47,6 @@
         header { padding: 14px; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); box-shadow: var(--shadow-float); display: flex; justify-content: space-between; align-items: center; z-index: 10; gap: 10px; }
         .header-title { font-weight: 700; font-size: 15px; letter-spacing: 1px; color: var(--primary-color); text-align: center; flex: 1; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* Аватарка с индикацией статуса */
         .avatar-view { width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; font-size: 20px; background: var(--bg-color); border: 1px solid var(--border-color); overflow: hidden; flex-shrink: 0; position: relative; transition: filter 0.3s ease; }
         .avatar-view.offline { filter: grayscale(100%); opacity: 0.6; }
         .avatar-view .status-dot { position: absolute; bottom: 2px; right: 2px; width: 8px; height: 8px; background: #4CAF50; border: 1px solid var(--bg-color); }
@@ -71,12 +70,10 @@
         .message-wrapper.my-msg .msg-author { display: none; }
         .reply-quote { background: rgba(0,0,0,0.3); border-left: 2px solid var(--primary-color); padding: 4px 8px; font-size: 12px; margin-bottom: 6px; color: var(--text-muted); }
 
-        /* Крупный размер для 1-3 смайликов */
         .big-emoji { font-size: 38px; line-height: 1.2; display: inline-block; }
 
         .msg-media { max-width: 100%; max-height: 220px; margin-top: 6px; display: block; border: 1px solid var(--border-color); }
 
-        /* Кастомный Аудио Плеер */
         .custom-audio-player { display: flex; align-items: center; gap: 10px; background: rgba(0,0,0,0.3); padding: 6px 10px; margin-top: 6px; border: 1px solid var(--glass-border); width: 210px; }
         .audio-play-btn { background: var(--primary-color); border: none; color: #fff; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
         .audio-progress-container { flex: 1; display: flex; flex-direction: column; gap: 4px; }
@@ -88,10 +85,10 @@
         .reaction-badge { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); padding: 2px 6px; font-size: 11px; display: flex; align-items: center; gap: 4px; }
 
         .reply-banner { background: var(--surface-bright); padding: 8px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; border: 1px solid var(--glass-border); border-bottom: none; }
-        .input-area { display: flex; gap: 8px; align-items: center; position: relative; }
+        .input-area { display: flex; gap: 8px; align-items: center; position: relative; padding-bottom: env(safe-area-inset-bottom); transition: transform 0.1s ease-out; }
         
         .glass-input-box { flex: 1; background: var(--glass-bg); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); box-shadow: var(--shadow-float); display: flex; align-items: center; }
-        .glass-input-box input { border: none; background: transparent; padding: 12px; }
+        .glass-input-box input { border: none; background: transparent; padding: 12px; font-size: 16px; }
 
         .square-btn { width: 44px; height: 44px; border: 1px solid var(--glass-border); background: var(--glass-bg); backdrop-filter: blur(12px); box-shadow: var(--shadow-float); color: var(--text-color); display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0; }
         .square-btn.primary { background: var(--primary-color); border: none; }
@@ -155,7 +152,7 @@
             <span onclick="cancelReply()" style="cursor:pointer;">✕</span>
         </div>
 
-        <div class="input-area">
+        <div class="input-area" id="input-area">
             <div id="attach-popover" class="attach-popover hidden">
                 <label class="attach-opt">
                     <span class="material-symbols-outlined">image</span> Фото / Видео
@@ -177,7 +174,6 @@
         </div>
     </div>
 
-    <!-- Модалка Настроек -->
     <div id="settings-modal" class="modal hidden" onclick="closeSettings(event)">
         <div class="modal-card" onclick="event.stopPropagation()">
             <h3 style="text-align:center; font-size: 16px;">НАСТРОЙКИ</h3>
@@ -215,7 +211,6 @@
         </div>
     </div>
 
-    <!-- Контекстное меню -->
     <div id="context-menu" class="modal hidden" onclick="closeContextMenu(event)">
         <div class="modal-card" onclick="event.stopPropagation()">
             <div class="reactions-selector">
@@ -246,13 +241,12 @@
     let authMode = 'login';
     let selectedAvatar = { type: 'emoji', val: '👤' };
     let currentUser = null;
-    let currentChatType = 'global'; // 'global' или 'dm'
+    let currentChatType = 'global';
     let activeDmUser = null;
     let replyToMsg = null;
     let selectedMsgId = null;
     let selectedMsgData = null;
     let pressTimer = null;
-    let isConnected = false;
     let usersStatusMap = {};
 
     let showDeletedPref = localStorage.getItem('show_deleted_pref') === 'true';
@@ -261,7 +255,12 @@
     let audioChunks = [];
     let recordedAudioBase64 = null;
 
+    let loadedMessageIds = new Set();
+    let isInitialLoad = true;
+
     window.addEventListener('DOMContentLoaded', () => {
+        requestNotificationPermission();
+
         const saved = localStorage.getItem('chat_user');
         if (saved) {
             currentUser = JSON.parse(saved);
@@ -269,10 +268,43 @@
         }
         document.getElementById('setting-show-deleted').checked = showDeletedPref;
 
-        // Позиционируем и слушаем добавление стикеров/гифок через клавиатуру (Gboard и т.д.)
         const input = document.getElementById('message-input');
         input.addEventListener('paste', handlePasteEvent);
+
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener('resize', () => {
+                const inputArea = document.getElementById('input-area');
+                const messagesList = document.getElementById('messages-list');
+                const keyboardHeight = window.innerHeight - window.visualViewport.height;
+
+                if (keyboardHeight > 0) {
+                    inputArea.style.transform = `translateY(-${keyboardHeight}px)`;
+                } else {
+                    inputArea.style.transform = 'translateY(0)';
+                }
+                messagesList.scrollTop = messagesList.scrollHeight;
+            });
+        }
     });
+
+    function requestNotificationPermission() {
+        if ("Notification" in window && Notification.permission === "default") {
+            Notification.requestPermission();
+        }
+    }
+
+    function sendSystemNotification(sender, where, messageText) {
+        if (!("Notification" in window) || Notification.permission !== "granted") return;
+        if (currentUser && sender === currentUser.name) return;
+
+        const title = `${sender} (${where})`;
+        const options = {
+            body: messageText,
+            icon: 'https://cdn-icons-png.flaticon.com/512/732/732200.png'
+        };
+
+        new Notification(title, options);
+    }
 
     window.setAuthMode = (mode) => {
         authMode = mode;
@@ -293,6 +325,7 @@
     };
 
     window.handleAuth = async () => {
+        requestNotificationPermission();
         const name = document.getElementById('auth-username').value.trim();
         const pass = document.getElementById('auth-password').value.trim();
 
@@ -330,6 +363,7 @@
     async function openChat() {
         setupPresence();
         listenUsersStatus();
+        listenGlobalNotifications();
 
         const userSnap = await get(child(ref(db, 'users'), currentUser.name));
         if (userSnap.exists()) {
@@ -360,6 +394,46 @@
         onValue(ref(db, 'status'), (snap) => {
             usersStatusMap = snap.val() || {};
             refreshAllAvatars();
+        });
+    }
+
+    function listenGlobalNotifications() {
+        let isFirstLoad = true;
+        
+        onChildAdded(ref(db, 'messages'), (snap) => {
+            if (isFirstLoad) return;
+            const data = snap.val();
+            if (data && !data.isSystem) {
+                let previewText = data.text || (data.img ? '📷 Фото' : data.video ? '🎥 Видео' : data.audio ? '🎤 Голосовое сообщение' : 'Сообщение');
+                sendSystemNotification(data.user, 'Общий чат', previewText);
+            }
+        });
+
+        get(ref(db, 'messages')).then(() => {
+            isFirstLoad = false;
+        });
+
+        onValue(ref(db, 'direct_messages'), (snap) => {
+            const allDms = snap.val();
+            if (!allDms) return;
+
+            Object.entries(allDms).forEach(([chatId, messages]) => {
+                const parts = chatId.split('_');
+                if (parts.includes(currentUser.name)) {
+                    const otherUser = parts.find(u => u !== currentUser.name);
+                    
+                    Object.entries(messages).forEach(([msgId, msgData]) => {
+                        if (!loadedMessageIds.has(msgId)) {
+                            loadedMessageIds.add(msgId);
+                            if (!isInitialLoad && msgData.user !== currentUser.name && !msgData.isSystem) {
+                                let previewText = msgData.text || (msgData.img ? '📷 Фото' : msgData.video ? '🎥 Видео' : msgData.audio ? '🎤 Голосовое сообщение' : 'Сообщение');
+                                sendSystemNotification(msgData.user, 'Личка', previewText);
+                            }
+                        }
+                    });
+                }
+            });
+            isInitialLoad = false;
         });
     }
 
